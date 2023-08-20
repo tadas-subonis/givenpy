@@ -109,7 +109,7 @@ You can also set up cleanup steps that will be executed after the test is finish
 ```python
 from dataclasses import dataclass
 
-from givenpy import given, when, then, LambdaWith
+from givenpy import given, when, then, lambda_with
 from hamcrest import *
 
 
@@ -133,7 +133,7 @@ def database_is_ready():
         def close():
             context.database.disconnect()
 
-        return LambdaWith(open, close)
+        return lambda_with(open, close)
 
     return step
 
