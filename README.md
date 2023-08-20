@@ -17,10 +17,10 @@ to encourage the re-use of setup code (given steps).
 import unittest
 from typing import Dict
 
+from givenpy import given, when, then
 from hamcrest import *
 from starlette.testclient import TestClient
 
-from tests.givenpy import given, when, then
 from tests.steps import prepare_api_server, create_test_client, prepare_injector
 
 
@@ -44,13 +44,13 @@ class TestExample(unittest.TestCase):
 or simpler
 
 ```python
-import unittest
 from typing import Dict
 
+from givenpy import given, when, then
 from hamcrest import *
+
 from starlette.testclient import TestClient
 
-from tests.givenpy import given, when, then
 from tests.steps import prepare_api_server, create_test_client, prepare_injector
 
 
@@ -79,6 +79,8 @@ pip install givenpy PyHamcrest
 ## Documentation
 
 ```python
+from givenpy import given, when, then
+from hamcrest import *
 
 def magic_function(x, external_number):
     return x + 1 + external_number
@@ -102,6 +104,9 @@ def test_magic_function():
 But I recommend using more flexible higher functiosn that can become configurable:
 
 ```python
+from givenpy import given, when, then
+from hamcrest import *
+
 def magic_function(x, external_number):
     return x + 1 + external_number
 
@@ -138,7 +143,7 @@ from starlette.testclient import TestClient
 
 from app.organizations.repository import TeamRepository
 from app.organizations.team.core import Team
-from tests.givenpy import given, when, then
+from givenpy import given, when, then
 from tests.integration.organization.test_feedback_submission import person_is_present
 from tests.integration.steps_auth import auth_is_ready
 from tests.integration.steps_database import database_repo_is_ready, database_is_clean
@@ -273,3 +278,11 @@ def test_a_list_of_teams_for_the_current_organization_should_be_retrievable():
 # Contributing
 
 Just create a PR or something. I'll review it and merge it if it's good.
+
+## Releasing a new version
+
+```bash
+git tag -a 1.0.2 -m "Tag 1.0.2"
+git push 
+git push origin --tags
+```
