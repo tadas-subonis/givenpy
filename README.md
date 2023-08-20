@@ -70,7 +70,7 @@ pip install givenpy PyHamcrest
 
 ## Documentation
 
-```
+```python
 
 def magic_function(x, external_number):
     return x + 1 + external_number
@@ -93,7 +93,7 @@ def test_magic_function():
 
 But I recommend using more flexible higher functiosn that can become configurable:
 
-```
+```python
 def magic_function(x, external_number):
     return x + 1 + external_number
     
