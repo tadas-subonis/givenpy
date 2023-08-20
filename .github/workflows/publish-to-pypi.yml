@@ -2,8 +2,8 @@ name: Test and Publish to PyPI
 
 on:
   push:
-    branches:
-      - master
+    tags:
+      - '*'
 
 jobs:
   build-test-and-publish:
