@@ -1,0 +1,35 @@
+name: Test and Publish to PyPI
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  build-test-and-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+
+      - name: Install Poetry
+        run: |
+          curl -sSL https://install.python-poetry.org | python3 -
+
+      - name: Install dependencies and project
+        run: |
+          poetry install
+
+      - name: Run tests with pytest
+        run: |
+          poetry run pytest tests
+
+      - name: Build and Publish
+        run: |
+          poetry build
+          poetry publish --username __token__ --password ${{ secrets.PYPI_API_TOKEN }}
