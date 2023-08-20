@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from givenpy import given, when, then, LambdaWith
+from givenpy import given, then, lambda_with
 from hamcrest import *
 
 
@@ -24,7 +24,7 @@ def database_is_ready():
         def close():
             context.database.disconnect()
 
-        return LambdaWith(open, close)
+        return lambda_with(open, close)
 
     return step
 

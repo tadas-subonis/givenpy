@@ -1,63 +1,62 @@
-class GivenScope:
-    def __init__(self, steps):
-        self.steps = steps or []
+from contextlib import contextmanager
 
-        class Context:
-            pass
 
-        self.context = Context()
-        self.started_steps = []
+@contextmanager
+def given(steps=None):
+    steps = steps or []
+    context = type('Context', (), {})()
+    started_steps = []
 
-    def __enter__(self):
-        context = self.context
-        if self.steps:
-            for step in self.steps:
-                result = step(context)
-                self.started_steps += [result]
-                if result and hasattr(result, "__enter__"):
-                    result.__enter__()
-        return context
-
-    def __exit__(self, type, value, traceback):
-        for step in reversed(self.started_steps):
+    try:
+        for step in steps:
+            result = step(context)
+            started_steps += [result]
+            if result and hasattr(result, "__enter__"):
+                result.__enter__()
+        yield context
+    except Exception as e:
+        for step in reversed(started_steps):
             result = step
             if result and hasattr(result, "__exit__"):
-                result.__exit__(type, value, traceback)
+                result.__exit__(type(e), e, e.__traceback__)
+        raise
+    else:
+        for step in reversed(started_steps):
+            result = step
+            if result and hasattr(result, "__exit__"):
+                result.__exit__(None, None, None)
 
 
-def given(steps=None):
-    return GivenScope(steps)
-
-
-def when(description=None):
-    return MockWith()
-
-
-def then(message=None):
-    return MockWith()
-
-
-class MockWith:
-    def __enter__(self):
-        pass
-
-    def __exit__(self, type, value, traceback):
-        pass
-
+class Mock:
+    """
+    Mock class that supports nesting.
+    """
     def __getattribute__(self, item):
-        return MockWith()
+        return Mock()
 
 
-class LambdaWith:
-    def __init__(self, enter, leave):
-        self.enter = enter
-        self.leave = leave
+@contextmanager
+def when(description=None):
+    yield Mock()
 
-    def __enter__(self):
-        self.enter()
 
-    def __exit__(self, type, value, traceback):
-        self.leave()
+@contextmanager
+def then(message=None):
+    yield Mock()
+
+
+@contextmanager
+def resulting(param=None):
+    yield Mock()
+
+
+@contextmanager
+def lambda_with(enter, leave):
+    enter()
+    try:
+        yield
+    finally:
+        leave()
 
 
 def loop_steps_iter(iterator, actions):
@@ -72,10 +71,6 @@ def loop_steps_iter(iterator, actions):
         def stop():
             pass
 
-        return LambdaWith(start, stop)
+        return lambda_with(start, stop)
 
     return step
-
-
-def resulting(param=None):
-    return MockWith()
