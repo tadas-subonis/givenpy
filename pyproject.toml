@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "givenpy"
-version = "1.0.2"
+version = "1.0.3"
 description = "A simple micro BDD framework for Python"
 authors = ["Tadas Subonis <tadas.subonis@gmail.com>"]
 license = "MIT"
@@ -10,7 +10,7 @@ classifiers = [
     "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.8",
     "Topic :: Software Development :: Libraries",
     "Topic :: Software Development :: Testing",
     "Topic :: Utilities",
