@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "givenpy"
-version = "1.0.3"
+version = "1.0.4"
 description = "A simple micro BDD framework for Python"
 authors = ["Tadas Subonis <tadas.subonis@gmail.com>"]
 license = "MIT"
