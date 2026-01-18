@@ -1,6 +1,6 @@
 [project]
 name = "givenpy"
-version = "1.0.4"
+version = "1.0.5"
 description = "A simple micro BDD framework for Python"
 authors = [
     { name = "Tadas Subonis", email = "tadas.subonis@gmail.com" }
