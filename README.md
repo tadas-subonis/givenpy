@@ -149,6 +149,43 @@ def test_database_should_be_closed_when_we_exit_context():
         assert_that(context.database.connected, is_(False))
 ```
 
+### Async setup and cleanup
+
+Use `async_given` when a setup step must await work or own an asynchronous resource.
+Steps may be ordinary or async functions and may return sync or async context managers.
+Resources close in reverse order, including when setup or the test fails. The existing
+`given`, `when` and `then` blocks also work inside an async test when setup is synchronous.
+
+```python
+from givenpy import async_given, async_lambda_with, when, then
+from hamcrest import assert_that, equal_to
+
+
+def a_connected_service():
+    async def step(context):
+        async def connect():
+            context.service = await make_test_service()
+
+        async def disconnect():
+            await context.service.close()
+
+        return async_lambda_with(connect, disconnect)
+
+    return step
+
+
+async def test_service_returns_a_result():
+    async with async_given([a_connected_service()]) as context:
+        with when("a request is sent"):
+            result = await context.service.request()
+
+        with then("the response is ready"):
+            assert_that(result.status, equal_to("ready"))
+```
+
+Run the async test with an async-capable test runner, such as pytest with
+`pytest-asyncio`, or call it with `asyncio.run` from a synchronous test.
+
 ## Guidelines
 
 - Always be explicit with your environment set up by adding all the necessary steps to the `given` block.
