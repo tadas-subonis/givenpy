@@ -31,7 +31,7 @@ wheels = [
 
 [[package]]
 name = "givenpy"
-version = "1.0.4"
+version = "1.1.0"
 source = { editable = "." }
 
 [package.dev-dependencies]
