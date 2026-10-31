@@ -49,6 +49,27 @@ class TestExample(unittest.TestCase):
 pip install givenpy PyHamcrest
 ```
 
+### For AI coding agents
+
+Install the [GivenPy behavior tests skill](skills/givenpy-behavior-tests/SKILL.md) in
+your own application's project to help your coding agent write meaningful tests using
+GivenPy and PyHamcrest. With Node.js/npm available, run:
+
+```bash
+npx skills add tadas-subonis/givenpy --skill givenpy-behavior-tests
+```
+
+Choose your coding agent when prompted. Add `-g` to install for your user across projects.
+For available agent options, see the [Skills CLI documentation](https://github.com/vercel-labs/skills/blob/main/docs/commands.md).
+
+Then ask your agent: "Use the GivenPy behavior tests skill to test account withdrawal."
+Automatic skill selection depends on your agent. The skill follows your application's
+test runner and isolation rules, and checks whether your installed GivenPy supports
+async setup with `agiven` before using it.
+
+The Python library and agent skill are separate installations: `pip install givenpy`
+does not install the skill, and installing the skill does not install Python dependencies.
+
 ## Documentation
 
 ```python
