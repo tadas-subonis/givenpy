@@ -3,7 +3,7 @@ import asyncio
 import pytest
 from hamcrest import assert_that, equal_to
 
-from givenpy import async_given, async_lambda_with, given, lambda_with, then, when
+from givenpy import agiven, async_lambda_with, given, lambda_with, then, when
 
 
 def a_connected_service(events):
@@ -25,7 +25,7 @@ def test_async_step_can_prepare_and_clean_up_a_service():
     events = []
 
     async def scenario():
-        async with async_given([a_connected_service(events)]) as context:
+        async with agiven([a_connected_service(events)]) as context:
             with when("the connected service handles a request"):
                 await asyncio.sleep(0)
                 result = "ready" if context.connected else "unavailable"
@@ -39,7 +39,7 @@ def test_async_step_can_prepare_and_clean_up_a_service():
     assert_that(events, equal_to(["connect", "disconnect"]))
 
 
-def test_async_given_closes_mixed_resources_in_reverse_order_after_setup_failure():
+def test_agiven_closes_mixed_resources_in_reverse_order_after_setup_failure():
     events = []
 
     def sync_resource(context):
@@ -52,7 +52,7 @@ def test_async_given_closes_mixed_resources_in_reverse_order_after_setup_failure
 
     async def scenario():
         with pytest.raises(RuntimeError, match="setup failed"):
-            async with async_given([sync_resource, a_connected_service(events), failed_setup]):
+            async with agiven([sync_resource, a_connected_service(events), failed_setup]):
                 pass
 
     asyncio.run(scenario())
@@ -61,12 +61,12 @@ def test_async_given_closes_mixed_resources_in_reverse_order_after_setup_failure
     ]))
 
 
-def test_async_given_closes_resources_when_the_test_body_fails():
+def test_agiven_closes_resources_when_the_test_body_fails():
     events = []
 
     async def scenario():
         with pytest.raises(ValueError, match="request failed"):
-            async with async_given([a_connected_service(events)]):
+            async with agiven([a_connected_service(events)]):
                 with when("the request fails"):
                     raise ValueError("request failed")
 
@@ -74,12 +74,12 @@ def test_async_given_closes_resources_when_the_test_body_fails():
     assert_that(events, equal_to(["connect", "disconnect"]))
 
 
-def test_async_given_closes_resources_when_the_test_is_cancelled():
+def test_agiven_closes_resources_when_the_test_is_cancelled():
     events = []
 
     async def scenario():
         with pytest.raises(asyncio.CancelledError):
-            async with async_given([a_connected_service(events)]):
+            async with agiven([a_connected_service(events)]):
                 raise asyncio.CancelledError()
 
     asyncio.run(scenario())
@@ -92,7 +92,7 @@ def test_async_trace_does_not_leak_to_another_task(capsys):
         plain_finished = asyncio.Event()
 
         async def traced():
-            async with async_given(trace=True):
+            async with agiven(trace=True):
                 traced_started.set()
                 await plain_finished.wait()
                 with when("traced request"):
@@ -100,7 +100,7 @@ def test_async_trace_does_not_leak_to_another_task(capsys):
 
         async def plain():
             await traced_started.wait()
-            async with async_given(trace=False):
+            async with agiven(trace=False):
                 with when("plain request"):
                     pass
             plain_finished.set()

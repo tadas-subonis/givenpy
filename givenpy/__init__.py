@@ -65,7 +65,7 @@ def given(steps=None, trace=False):
 
 
 @asynccontextmanager
-async def async_given(steps=None, trace=False):
+async def agiven(steps=None, trace=False):
     """Run sync or async setup steps and close their resources in reverse order."""
     context = type('Context', (), {})()
     trace_token = _trace.set(trace)
